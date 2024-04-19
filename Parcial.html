@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <title>Formulario</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    table, th, td {
+      border: 1px solid black;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">WebDeveloper</h1>
+    
+    <form id="myForm">
+      <fieldset>
+        <legend class="text-center">formulario de afiliación</legend>
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" class="form-control" id="nombre" name="nombre" required>
+        </div>
+
+        <div class="form-group">
+          <label for="correo">Correo electrónico:</label>
+          <input type="email" class="form-control" id="correo" name="correo" required>
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono:</label>
+          <input type="text" class="form-control" id="telefono" name="telefono" required>
+        </div>
+
+        <div class="form-group">
+          <label for="gusto">Gustos:</label>
+          <input type="text" class="form-control" id="gusto" name="gusto">
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="agregarInformacion()">Agregar</button>
+      </fieldset>
+    </form>
+
+    <br>
+
+    <table id="tabla" class="table" style="display: none;">
+      <thead class="thead-dark">
+        <tr>
+          <th>Gusto</th>
+          <th>Porcentaje</th>
+          <th>Editar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Aquí se agregarán las filas dinámicamente -->
+      </tbody>
+    </table>
+
+    <br>
+
+    <div class="text-center">
+      <button class="btn btn-success" onclick="generarTabla()">Aceptar</button>
+      <button class="btn btn-danger" onclick="borrarCampos()">Cancelar</button>
+    </div>
+
+    <br>
+    
+    <div id="tablaGenerada"></div>
+  </div>
+
+  <script>
+    function agregarInformacion() {
+      var gustoInput = document.getElementById("gusto");
+      var gusto = gustoInput.value;
+      
+      var tabla = document.getElementById("tabla");
+      tabla.style.display = "table";
+
+      var fila = tabla.insertRow();
+      
+      var celdaGusto = fila.insertCell();
+      celdaGusto.innerHTML = gusto;
+      
+      var celdaPorcentaje = fila.insertCell();
+      celdaPorcentaje.innerHTML = "-";
+      
+      var celdaEditar = fila.insertCell();
+      celdaEditar.innerHTML = '<button class="btn btn-primary" onclick="editarInformacion(this)">Editar</button>';
+      
+      gustoInput.value = "";
+    }
+    
+    function editarInformacion(button) {
+      var row = button.parentNode.parentNode;
+      var porcentajeCell = row.cells[1];
+      
+      var porcentajeInput = document.createElement("input");
+      porcentajeInput.type = "number";
+      porcentajeInput.className = "form-control";
+      porcentajeInput.value = "";
+      
+      porcentajeCell.innerHTML = "";
+      porcentajeCell.appendChild(porcentajeInput);
+      
+      button.innerHTML = "Guardar";
+      button.className = "btn btn-success";
+      button.onclick = function() {
+        guardarInformacion(button);
+      };
+    }
+    
+    function guardarInformacion(button) {
+      var row = button.parentNode.parentNode;
+      var porcentajeCell = row.cells[1];
+      var porcentajeInput = porcentajeCell.firstChild;
+      
+      porcentajeCell.innerHTML = porcentajeInput.value;
+      
+      button.innerHTML = "Editar";
+      button.className = "btn btn-primary";
+      button.onclick = function() {
+        editarInformacion(button);
+      };
+    }
+    
+    function generarTabla() {
+      var form = document.getElementById("myForm");
+      var nombre = form.nombre.value;
+      var correo = form.correo.value;
+      var telefono = form.telefono.value;
+      
+      var tablaGenerada = document.createElement("table");
+      tablaGenerada.className = "table";
+      
+      var fila = tablaGenerada.insertRow();
+      var celdaNombre = fila.insertCell();
+      var celdaCorreo = fila.insertCell();
+      var celdaTelefono = fila.insertCell();
+      
+      celdaNombre.innerHTML = nombre;
+      celdaCorreo.innerHTML = correo;
+      celdaTelefono.innerHTML = telefono;
+      
+      var contenedorTabla = document.getElementById("tablaGenerada");
+      contenedorTabla.innerHTML = "";
+      contenedorTabla.appendChild(tablaGenerada);
+    }
+    
+    function borrarCampos() {
+      var form = document.getElementById("myForm");
+      form.reset();
+      
+      var tablaGenerada = document.getElementById("tablaGenerada");
+      tablaGenerada.innerHTML = "";
+      
+      var tabla = document.getElementById("tabla");
+      tabla.style.display = "none";
+      tabla.innerHTML = "<thead class='thead-dark'><tr><th>Gusto</th><th>Porcentaje</th><th>Editar</th></tr></thead><tbody></tbody>";
+    }
+  </script>
+</body>
+</html>
+
+
